@@ -91,7 +91,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           `}>
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-700 bg-clip-text text-transparent">
                   Admin Panel
                 </h1>
                 <p className="text-xs text-gray-500 truncate">
@@ -130,7 +130,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   className={`
                     w-full flex items-center px-3 py-2.5 text-left rounded-lg transition-all duration-200
                     ${active 
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                      ? 'bg-gradient-to-r from-cyan-600 to-blue-700 text-white shadow-lg' 
                       : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                     }
                     ${isCollapsed ? 'justify-center' : 'space-x-3'}
