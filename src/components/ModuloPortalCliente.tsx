@@ -117,7 +117,7 @@ export function ModuloPortalCliente() {
 
           <div className="flex gap-2">
             <button 
-              onClick={() => window.open('/portal/obra-123', '_blank')}
+              onClick={() => window.open('/portal-cliente', '_blank')}
               className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2"
             >
               <Globe className="h-4 w-4" />
@@ -543,12 +543,12 @@ function AbaAparencia() {
 // Aba Preview
 function AbaPreview({ secoes, progressoConfig, navigate }: any) {
   const abrirPortalDesktop = () => {
-    window.open('/portal/obra-123', '_blank');
+    window.open('/portal-cliente', '_blank');
   };
 
   const abrirPortalMobile = () => {
     // Abre em nova aba com simulação mobile (mesmo link)
-    const newWindow = window.open('/portal/obra-123', '_blank');
+    const newWindow = window.open('/portal-cliente', '_blank');
     if (newWindow) {
       // Opcional: Adicionar parâmetro para forçar view mobile
       newWindow.addEventListener('load', () => {

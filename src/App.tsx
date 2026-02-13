@@ -20,6 +20,7 @@ import { ModuloSourcing } from './components/ModuloSourcing';
 import { ModuloObra } from './components/ModuloObra';
 import { ModuloPortalCliente } from './components/ModuloPortalCliente';
 import { PortalClientePublico } from './components/PortalClientePublico';
+import { PainelExecutor } from './components/PainelExecutor';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Componente OrçaRede - a ferramenta de orçamentos
@@ -110,8 +111,11 @@ function App() {
           {/* Rota da Ferramenta Portal do Cliente (Admin Config) */}
           <Route path="/tools/portal-cliente" element={<ModuloPortalCliente />} />
 
-          {/* Rota Pública - Portal que o Cliente Acessa */}
-          <Route path="/portal/:obraId" element={<PortalClientePublico />} />
+          {/* Rota Pública - Portal que o Cliente Acessa (SEM parâmetro dinâmico) */}
+          <Route path="/portal-cliente" element={<PortalClientePublico />} />
+
+          {/* Rota do Painel Executor Mobile (SEM parâmetro dinâmico) */}
+          <Route path="/painel-executor" element={<PainelExecutor />} />
 
           {/* Rota catch-all */}
           <Route path="*" element={<Navigate to="/admin" replace />} />

@@ -17,13 +17,15 @@ import {
   Clock,
   TrendingUp,
   Activity,
-  Home
+  Home,
+  Smartphone,
+  ExternalLink
 } from 'lucide-react';
 import { Breadcrumbs } from './Breadcrumbs';
 
 export function ModuloObra() {
   const navigate = useNavigate();
-  const [abaAtiva, setAbaAtiva] = useState<'chat' | 'progresso' | 'checklist' | 'ocorrencias'>('progresso');
+  const [abaAtiva, setAbaAtiva] = useState<'chat' | 'progresso' | 'checklist' | 'ocorrencias' | 'executores'>('progresso');
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-gray-50 to-gray-100">
@@ -128,6 +130,17 @@ export function ModuloObra() {
                 <AlertTriangle className="h-4 w-4 inline mr-2" />
                 Ocorrências
               </button>
+              <button
+                onClick={() => setAbaAtiva('executores')}
+                className={`px-6 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  abaAtiva === 'executores'
+                    ? 'bg-indigo-100 text-indigo-700'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Smartphone className="h-4 w-4 inline mr-2" />
+                Executores
+              </button>
             </nav>
           </div>
 
@@ -136,6 +149,7 @@ export function ModuloObra() {
             {abaAtiva === 'chat' && <AbaChat />}
             {abaAtiva === 'checklist' && <AbaChecklist />}
             {abaAtiva === 'ocorrencias' && <AbaOcorrencias />}
+            {abaAtiva === 'executores' && <AbaExecutores />}
           </div>
         </div>
       </div>
@@ -147,6 +161,51 @@ export function ModuloObra() {
 function AbaProgresso() {
   return (
     <div className="space-y-6">
+      {/* Card de Acesso ao Painel Executor */}
+      <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <Smartphone className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold">Painel Executor Mobile</h3>
+                <p className="text-sm text-white/80">Interface para executores em campo</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/90 mb-4">
+              Acesso otimizado para dispositivos móveis com funcionalidades offline, 
+              reporte de quantitativos e evidências multimídia.
+            </p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium backdrop-blur-sm">
+                📱 Mobile-First
+              </span>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium backdrop-blur-sm">
+                🔄 Modo Offline
+              </span>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium backdrop-blur-sm">
+                📸 Evidências
+              </span>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium backdrop-blur-sm">
+                📊 Quantitativos
+              </span>
+            </div>
+            <a
+              href="/executor/obra-123"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-indigo-600 rounded-lg font-semibold hover:bg-white/90 transition-colors shadow-lg"
+            >
+              <Smartphone className="h-5 w-5" />
+              Abrir Painel Executor
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Cards de Resumo */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-5">
@@ -743,6 +802,294 @@ function AbaOcorrencias() {
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+// Aba Executores
+function AbaExecutores() {
+  const [copiedLink, setCopiedLink] = useState<string | null>(null);
+
+  const executores = [
+    {
+      id: '1',
+      nome: 'João Silva',
+      avatar: '👷',
+      cargo: 'Instalador Sênior',
+      status: 'online',
+      ultimaAtualizacao: 'Há 5 minutos',
+      tarefasHoje: 3,
+      tarefasConcluidas: 2,
+      linkAcesso: 'obra-123'
+    },
+    {
+      id: '2',
+      nome: 'Maria Santos',
+      avatar: '👷‍♀️',
+      cargo: 'Instaladora Pleno',
+      status: 'online',
+      ultimaAtualizacao: 'Há 12 minutos',
+      tarefasHoje: 4,
+      tarefasConcluidas: 3,
+      linkAcesso: 'obra-123'
+    },
+    {
+      id: '3',
+      nome: 'Pedro Costa',
+      avatar: '👨‍🔧',
+      cargo: 'Técnico',
+      status: 'offline',
+      ultimaAtualizacao: 'Há 2 horas',
+      tarefasHoje: 2,
+      tarefasConcluidas: 2,
+      linkAcesso: 'obra-123'
+    },
+    {
+      id: '4',
+      nome: 'Ana Oliveira',
+      avatar: '👩‍🔧',
+      cargo: 'Instaladora Júnior',
+      status: 'online',
+      ultimaAtualizacao: 'Há 8 minutos',
+      tarefasHoje: 3,
+      tarefasConcluidas: 1,
+      linkAcesso: 'obra-123'
+    }
+  ];
+
+  const copiarLink = (executorId: string, obraId: string) => {
+    const link = `${window.location.origin}/executor/${obraId}`;
+    navigator.clipboard.writeText(link);
+    setCopiedLink(executorId);
+    setTimeout(() => setCopiedLink(null), 2000);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Info sobre o Painel Executor */}
+      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-6">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-purple-100 rounded-lg">
+            <Smartphone className="h-6 w-6 text-purple-600" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Painel Executor Mobile
+            </h3>
+            <p className="text-sm text-gray-700 mb-3">
+              Os executores podem acessar suas tarefas e reportar progresso diretamente do campo 
+              usando smartphones ou tablets. O sistema funciona mesmo sem conexão com internet, 
+              sincronizando automaticamente quando a conexão for restabelecida.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 bg-white border border-purple-200 rounded-full text-xs font-medium text-purple-700">
+                📱 Mobile-First
+              </span>
+              <span className="px-3 py-1 bg-white border border-purple-200 rounded-full text-xs font-medium text-purple-700">
+                🔄 Sincronização Offline
+              </span>
+              <span className="px-3 py-1 bg-white border border-purple-200 rounded-full text-xs font-medium text-purple-700">
+                📷 Câmera com Marca d'água
+              </span>
+              <span className="px-3 py-1 bg-white border border-purple-200 rounded-full text-xs font-medium text-purple-700">
+                🎤 Gravação de Áudio
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Estatísticas da Equipe */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-2">
+            <Users className="h-5 w-5 text-blue-600" />
+            <span className="text-2xl font-bold text-blue-600">{executores.length}</span>
+          </div>
+          <p className="text-sm font-medium text-gray-700">Executores</p>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-2xl font-bold text-green-600">
+              {executores.filter(e => e.status === 'online').length}
+            </span>
+          </div>
+          <p className="text-sm font-medium text-gray-700">Online Agora</p>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-2">
+            <TrendingUp className="h-5 w-5 text-purple-600" />
+            <span className="text-2xl font-bold text-purple-600">
+              {executores.reduce((acc, e) => acc + e.tarefasConcluidas, 0)}
+            </span>
+          </div>
+          <p className="text-sm font-medium text-gray-700">Tarefas Concluídas Hoje</p>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-2">
+            <Clock className="h-5 w-5 text-orange-600" />
+            <span className="text-2xl font-bold text-orange-600">
+              {executores.reduce((acc, e) => acc + (e.tarefasHoje - e.tarefasConcluidas), 0)}
+            </span>
+          </div>
+          <p className="text-sm font-medium text-gray-700">Tarefas em Andamento</p>
+        </div>
+      </div>
+
+      {/* Lista de Executores */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Equipe em Campo
+        </h3>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {executores.map((executor) => (
+            <div 
+              key={executor.id}
+              className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start gap-4">
+                {/* Avatar */}
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-3xl flex-shrink-0">
+                  {executor.avatar}
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1">
+                        {executor.nome}
+                      </h4>
+                      <p className="text-sm text-gray-600">{executor.cargo}</p>
+                    </div>
+                    
+                    {/* Status */}
+                    <div className="flex items-center gap-2">
+                      {executor.status === 'online' ? (
+                        <span className="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                          <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                          Online
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                          <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
+                          Offline
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Progresso */}
+                  <div className="mb-3">
+                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                      <span>Tarefas do dia</span>
+                      <span className="font-medium">
+                        {executor.tarefasConcluidas}/{executor.tarefasHoje}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full transition-all"
+                        style={{ 
+                          width: `${(executor.tarefasConcluidas / executor.tarefasHoje) * 100}%` 
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Última Atualização */}
+                  <p className="text-xs text-gray-500 mb-3">
+                    Última atualização: {executor.ultimaAtualizacao}
+                  </p>
+
+                  {/* Ações */}
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => copiarLink(executor.id, executor.linkAcesso)}
+                      className="flex-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+                    >
+                      {copiedLink === executor.id ? (
+                        <>
+                          <CheckSquare className="h-4 w-4" />
+                          Link Copiado!
+                        </>
+                      ) : (
+                        <>
+                          <Smartphone className="h-4 w-4" />
+                          Copiar Link Mobile
+                        </>
+                      )}
+                    </button>
+                    
+                    <a
+                      href={`/executor/${executor.linkAcesso}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center"
+                      title="Abrir painel em nova aba"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Atividade Recente */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Atividade Recente dos Executores
+        </h3>
+        
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+              👷‍♀️
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900">
+                Maria Santos completou instalação de 50 isoladores
+              </p>
+              <p className="text-xs text-gray-600">Há 12 minutos • Tarefa: Instalação de Isoladores</p>
+            </div>
+            <CheckSquare className="h-5 w-5 text-green-600 flex-shrink-0" />
+          </div>
+
+          <div className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+              👷
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900">
+                João Silva enviou foto de evidência
+              </p>
+              <p className="text-xs text-gray-600">Há 5 minutos • Tarefa: Montagem de Postes 12m</p>
+            </div>
+            <ImageIcon className="h-5 w-5 text-blue-600 flex-shrink-0" />
+          </div>
+
+          <div className="flex items-center gap-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+              👩‍🔧
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900">
+                Ana Oliveira gravou observação em áudio
+              </p>
+              <p className="text-xs text-gray-600">Há 8 minutos • Tarefa: Lançamento Cabo Secundário</p>
+            </div>
+            <Mic className="h-5 w-5 text-purple-600 flex-shrink-0" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

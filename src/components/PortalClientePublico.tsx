@@ -11,12 +11,34 @@ import {
   Mail,
   Download,
   ZoomIn,
-  Send
+  Send,
+  Map as MapIconLucide,
+  ChevronRight
 } from 'lucide-react';
+import { MapaProgressoCliente } from './MapaProgressoCliente';
 
 export function PortalClientePublico() {
-  const [abaAtiva, setAbaAtiva] = useState<'geral' | 'galeria' | 'contato'>('geral');
+  const [abaAtiva, setAbaAtiva] = useState<'geral' | 'mapa' | 'galeria' | 'contato'>('geral');
   const [fotoSelecionada, setFotoSelecionada] = useState<number | null>(null);
+
+  // Dados mockados para demonstração do mapa
+  const postesExemplo = [
+    { id: '1', name: 'P-001', x_coord: 1200, y_coord: 1500, status: 'concluido' as const, tipoPoste: 'Concreto 10m' },
+    { id: '2', name: 'P-002', x_coord: 1800, y_coord: 1500, status: 'concluido' as const, tipoPoste: 'Concreto 10m' },
+    { id: '3', name: 'P-003', x_coord: 2400, y_coord: 1600, status: 'concluido' as const, tipoPoste: 'Concreto 12m' },
+    { id: '4', name: 'P-004', x_coord: 3000, y_coord: 1700, status: 'em_progresso' as const, tipoPoste: 'Concreto 12m' },
+    { id: '5', name: 'P-005', x_coord: 3600, y_coord: 1800, status: 'em_progresso' as const, tipoPoste: 'Concreto 10m' },
+    { id: '6', name: 'P-006', x_coord: 4200, y_coord: 1900, status: 'pendente' as const, tipoPoste: 'Concreto 10m' },
+    { id: '7', name: 'P-007', x_coord: 4800, y_coord: 2000, status: 'pendente' as const, tipoPoste: 'Concreto 12m' },
+    { id: '8', name: 'P-008', x_coord: 1500, y_coord: 2500, status: 'concluido' as const, tipoPoste: 'Concreto 10m' },
+    { id: '9', name: 'P-009', x_coord: 2200, y_coord: 2600, status: 'concluido' as const, tipoPoste: 'Concreto 10m' },
+    { id: '10', name: 'P-010', x_coord: 2900, y_coord: 2700, status: 'em_progresso' as const, tipoPoste: 'Concreto 12m' },
+    { id: '11', name: 'P-011', x_coord: 3600, y_coord: 2800, status: 'pendente' as const, tipoPoste: 'Concreto 10m' },
+    { id: '12', name: 'P-012', x_coord: 4300, y_coord: 2900, status: 'pendente' as const, tipoPoste: 'Concreto 12m' },
+  ];
+
+  // URL de exemplo de PDF (pode ser null para mostrar quadro branco)
+  const imagemPlantaExemplo = null; // ou uma URL de PDF: 'https://exemplo.com/planta.pdf'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50">
@@ -64,6 +86,25 @@ export function PortalClientePublico() {
           </div>
         </div>
 
+        {/* Card de Acesso ao Admin */}
+        <a
+          href="/admin"
+          className="block bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white rounded-xl shadow-lg border-2 border-purple-400 p-6 mb-6 transition-all hover:shadow-xl hover:scale-[1.02]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center text-3xl backdrop-blur-sm shadow-lg">
+                🎯
+              </div>
+              <div>
+                <h3 className="font-bold text-xl mb-1">Painel Administrativo</h3>
+                <p className="text-sm text-white/90">Acesse o sistema completo de gestão e controle de obras</p>
+              </div>
+            </div>
+            <ChevronRight className="h-8 w-8 text-white/80" />
+          </div>
+        </a>
+
         {/* Tabs */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
           <div className="border-b border-gray-200 bg-gray-50">
@@ -78,6 +119,17 @@ export function PortalClientePublico() {
               >
                 <BarChart3 className="h-4 w-4 inline mr-2" />
                 Progresso
+              </button>
+              <button
+                onClick={() => setAbaAtiva('mapa')}
+                className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
+                  abaAtiva === 'mapa'
+                    ? 'bg-white text-cyan-600 border-b-2 border-cyan-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <MapIconLucide className="h-4 w-4 inline mr-2" />
+                Mapa
               </button>
               <button
                 onClick={() => setAbaAtiva('galeria')}
@@ -104,7 +156,7 @@ export function PortalClientePublico() {
             </nav>
           </div>
 
-          <div className="p-6">
+          <div className={abaAtiva === 'mapa' ? 'p-0' : 'p-6'}>
             {abaAtiva === 'geral' && (
               <div className="space-y-6">
                 {/* Progresso Geral */}
@@ -239,6 +291,16 @@ export function PortalClientePublico() {
                     />
                   </div>
                 </div>
+              </div>
+            )}
+
+            {abaAtiva === 'mapa' && (
+              <div className="h-[600px]">
+                <MapaProgressoCliente 
+                  imagemPlanta={imagemPlantaExemplo}
+                  postes={postesExemplo}
+                  renderVersion={1}
+                />
               </div>
             )}
 
