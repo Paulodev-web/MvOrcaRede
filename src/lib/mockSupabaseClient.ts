@@ -1,210 +1,23 @@
-// Cliente Supabase Mockado - Sistema totalmente funcional sem conexão com banco de dados
-
-interface MockUser {
-  id: string;
-  email: string;
-  user_metadata: {
-    full_name?: string;
-  };
-  email_confirmed_at?: string;
-}
-
-interface MockSession {
-  user: MockUser;
-  access_token: string;
-  refresh_token: string;
-}
+// Cliente Supabase Simplificado - Sistema 100% livre sem autenticação
 
 class MockSupabaseClient {
-  private currentSession: MockSession | null = null;
-  private listeners: ((event: string, session: MockSession | null) => void)[] = [];
-
-  // Usuário mock pré-configurado
-  private mockUser: MockUser = {
-    id: 'mock-user-id-123',
-    email: 'usuario@exemplo.com',
-    user_metadata: {
-      full_name: 'Usuário Teste'
-    },
-    email_confirmed_at: new Date().toISOString()
-  };
-
-  constructor() {
-    // Inicializa com usuário logado por padrão
-    this.currentSession = {
-      user: this.mockUser,
-      access_token: 'mock-access-token',
-      refresh_token: 'mock-refresh-token'
-    };
-  }
-
-  // Auth API Mock
+  // Auth API Mock - Sem autenticação real, apenas estrutura vazia
   auth = {
-    // Busca sessão atual
-    getSession: async () => {
-      return {
-        data: { session: this.currentSession },
-        error: null
-      };
-    },
-
-    // Busca usuário atual
-    getUser: async () => {
-      if (!this.currentSession) {
-        return {
-          data: { user: null },
-          error: { message: 'Usuário não autenticado' }
-        };
-      }
-      return {
-        data: { user: this.currentSession.user },
-        error: null
-      };
-    },
-
-    // Login
-    signInWithPassword: async ({ email, password }: { email: string; password: string }) => {
-      // Validação básica mockada
-      if (!email || !password) {
-        return {
-          data: { session: null, user: null },
-          error: { message: 'Email e senha são obrigatórios' }
-        };
-      }
-
-      // Simula login bem-sucedido
-      this.currentSession = {
-        user: { ...this.mockUser, email },
-        access_token: 'mock-access-token',
-        refresh_token: 'mock-refresh-token'
-      };
-
-      // Notifica listeners
-      this.listeners.forEach(cb => cb('SIGNED_IN', this.currentSession));
-
-      return {
-        data: { session: this.currentSession, user: this.currentSession.user },
-        error: null
-      };
-    },
-
-    // Cadastro
-    signUp: async ({ email, password, options }: any) => {
-      // Validação básica mockada
-      if (!email || !password) {
-        return {
-          data: { session: null, user: null },
-          error: { message: 'Email e senha são obrigatórios' }
-        };
-      }
-
-      const newUser: MockUser = {
-        id: 'mock-user-' + Date.now(),
-        email,
-        user_metadata: options?.data || {},
-        email_confirmed_at: new Date().toISOString()
-      };
-
-      this.currentSession = {
-        user: newUser,
-        access_token: 'mock-access-token',
-        refresh_token: 'mock-refresh-token'
-      };
-
-      // Notifica listeners
-      this.listeners.forEach(cb => cb('SIGNED_IN', this.currentSession));
-
-      return {
-        data: { session: this.currentSession, user: newUser },
-        error: null
-      };
-    },
-
-    // Logout
-    signOut: async () => {
-      const oldSession = this.currentSession;
-      this.currentSession = null;
-
-      // Notifica listeners
-      this.listeners.forEach(cb => cb('SIGNED_OUT', null));
-
-      return {
-        error: null
-      };
-    },
-
-    // Reset de senha
-    resetPasswordForEmail: async (email: string, options?: any) => {
-      console.log('Mock: Reset password email enviado para', email);
-      return {
-        data: {},
-        error: null
-      };
-    },
-
-    // Atualizar usuário
-    updateUser: async (attributes: any) => {
-      if (!this.currentSession) {
-        return {
-          data: { user: null },
-          error: { message: 'Usuário não autenticado' }
-        };
-      }
-
-      // Atualiza dados do usuário mockado
-      this.currentSession.user = {
-        ...this.currentSession.user,
-        ...attributes
-      };
-
-      return {
-        data: { user: this.currentSession.user },
-        error: null
-      };
-    },
-
-    // Reenviar email de verificação
-    resend: async ({ type, email, options }: any) => {
-      console.log('Mock: Email de verificação reenviado para', email);
-      return {
-        data: {},
-        error: null
-      };
-    },
-
-    // Listener de mudanças de autenticação
-    onAuthStateChange: (callback: (event: string, session: MockSession | null) => void) => {
-      this.listeners.push(callback);
-
-      // Chama o callback imediatamente com o estado atual
-      setTimeout(() => {
-        callback(this.currentSession ? 'SIGNED_IN' : 'SIGNED_OUT', this.currentSession);
-      }, 0);
-
-      return {
-        subscription: {
-          unsubscribe: () => {
-            const index = this.listeners.indexOf(callback);
-            if (index > -1) {
-              this.listeners.splice(index, 1);
-            }
-          }
-        },
-        data: {
-          subscription: {
-            unsubscribe: () => {
-              const index = this.listeners.indexOf(callback);
-              if (index > -1) {
-                this.listeners.splice(index, 1);
-              }
-            }
-          }
-        }
-      };
-    }
+    getSession: async () => ({ data: { session: null }, error: null }),
+    getUser: async () => ({ data: { user: null }, error: null }),
+    signInWithPassword: async () => ({ data: { session: null, user: null }, error: null }),
+    signUp: async () => ({ data: { session: null, user: null }, error: null }),
+    signOut: async () => ({ error: null }),
+    resetPasswordForEmail: async () => ({ data: {}, error: null }),
+    updateUser: async () => ({ data: { user: null }, error: null }),
+    resend: async () => ({ data: {}, error: null }),
+    onAuthStateChange: () => ({
+      subscription: { unsubscribe: () => {} },
+      data: { subscription: { unsubscribe: () => {} } }
+    })
   };
 
-  // Storage API Mock (vazio por enquanto, pode ser expandido)
+  // Storage API Mock
   storage = {
     from: (bucket: string) => ({
       upload: async (path: string, file: File) => {
@@ -231,14 +44,13 @@ class MockSupabaseClient {
 
   // Database API Mock
   from(table: string) {
-    return new MockQueryBuilder(table, this.currentSession);
+    return new MockQueryBuilder(table);
   }
 }
 
 // Mock Query Builder para simular operações de banco de dados
 class MockQueryBuilder {
   private table: string;
-  private session: MockSession | null;
   private filters: any[] = [];
   private selectFields: string = '*';
   private orderField?: string;
@@ -246,9 +58,8 @@ class MockQueryBuilder {
   private singleResult: boolean = false;
   private limitValue?: number;
 
-  constructor(table: string, session: MockSession | null) {
+  constructor(table: string) {
     this.table = table;
-    this.session = session;
   }
 
   select(fields: string = '*') {
