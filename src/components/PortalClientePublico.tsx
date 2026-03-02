@@ -13,7 +13,6 @@ import {
   ZoomIn,
   Send,
   Map as MapIconLucide,
-  ChevronRight
 } from 'lucide-react';
 import { MapaProgressoCliente } from './MapaProgressoCliente';
 
@@ -85,25 +84,6 @@ export function PortalClientePublico() {
             </div>
           </div>
         </div>
-
-        {/* Card de Acesso ao Admin */}
-        <a
-          href="/admin"
-          className="block bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white rounded-xl shadow-lg border-2 border-purple-400 p-6 mb-6 transition-all hover:shadow-xl hover:scale-[1.02]"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center text-3xl backdrop-blur-sm shadow-lg">
-                🎯
-              </div>
-              <div>
-                <h3 className="font-bold text-xl mb-1">Painel Administrativo</h3>
-                <p className="text-sm text-white/90">Acesse o sistema completo de gestão e controle de obras</p>
-              </div>
-            </div>
-            <ChevronRight className="h-8 w-8 text-white/80" />
-          </div>
-        </a>
 
         {/* Tabs */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
